@@ -114,6 +114,14 @@ public class Game
             case GO:
                 goRoom(command);
                 break;
+                
+            case LOOK:
+                look();
+                break;
+                
+            case EAT:
+                eat();
+                break;
 
             case QUIT:
                 wantToQuit = quit(command);
@@ -162,6 +170,24 @@ public class Game
             currentRoom = nextRoom;
             System.out.println(currentRoom.getLongDescription());
         }
+    }
+    
+    /**
+     * Simply look around the room. This will show you what the room's
+     * description is as well as what exits we can currently go through.
+     */
+    private void look()
+    {
+        System.out.println(currentRoom.getLongDescription());
+    }
+    
+    /**
+     * Eat a peice of food. This will have some relevance later.
+     */
+    private void eat()
+    {
+        System.out.println("You have eaten now and you are not hungry" +
+        "anymore.");
     }
 
     /** 
