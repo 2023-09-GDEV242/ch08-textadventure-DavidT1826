@@ -28,6 +28,14 @@ public class Game
         createRooms();
         parser = new Parser();
     }
+    
+    /**
+     * Create the items within the rooms.
+     */
+    private void createItems()
+    {
+        
+    }
 
     /**
      * Create all the rooms and link their exits together.
@@ -43,19 +51,31 @@ public class Game
         lab = new Room("in a computing lab");
         office = new Room("in the computing admin office");
         
-        // initialise room exits
+        Item mask, mug, syringe, paper;
+        
+        // create the items
+        mask = new Item("mask", 3);
+        mug = new Item("mug", 4);
+        syringe = new Item("syringe", 2);
+        paper = new Item("piece of paper", 1);
+        
+        // initialise room exits and items
         outside.setExit("east", theater);
         outside.setExit("south", lab);
         outside.setExit("west", pub);
 
         theater.setExit("west", outside);
+        theater.setItem(mask);
 
         pub.setExit("east", outside);
+        pub.setItem(mug);
 
         lab.setExit("north", outside);
         lab.setExit("east", office);
+        lab.setItem(syringe);
 
         office.setExit("west", lab);
+        office.setItem(paper);
 
         currentRoom = outside;  // start game outside
     }
@@ -169,6 +189,11 @@ public class Game
         else {
             currentRoom = nextRoom;
             System.out.println(currentRoom.getLongDescription());
+            if(!currentRoom.items.isEmpty()){
+                for(Item item : currentRoom.items){
+                    System.out.println(item.getDescription());
+                }
+            }
         }
     }
     
