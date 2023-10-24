@@ -20,17 +20,16 @@ import java.util.Stack;
 public class Game 
 {
     private Parser parser;
-    private Room currentRoom;
-    private Stack<Room> prevRooms;
+    private Player player;
         
     /**
      * Create the game and initialise its internal map.
      */
     public Game() 
     {
-        createRooms();
         parser = new Parser();
-        prevRooms = new Stack<>();
+        player = new Player();
+        createRooms();
     }
     
     /**
@@ -81,7 +80,7 @@ public class Game
         office.setExit("west", lab);
         office.setItem(paper);
 
-        currentRoom = outside;  // start game outside
+        player.changeRoom(outside); // start game outside
     }
 
     /**
@@ -112,7 +111,7 @@ public class Game
         System.out.println("World of Zuul is a new, incredibly boring adventure game.");
         System.out.println("Type '" + CommandWord.HELP + "' if you need help.");
         System.out.println();
-        System.out.println(currentRoom.getLongDescription());
+        System.out.println(player.getCurrentRoom().getLongDescription());
     }
 
     /**
@@ -122,7 +121,7 @@ public class Game
      */
     private boolean processCommand(Command command) 
     {
-        boolean wantToQuit = false;
+        boolean quit = false;
 
         CommandWord commandWord = command.getCommandWord();
 
@@ -136,7 +135,7 @@ public class Game
                 break;
 
             case GO:
-                goRoom(command);
+                quit = goRoom(command);
                 break;
                 
             case LOOK:
@@ -150,12 +149,16 @@ public class Game
             case BACK:
                 back();
                 break;
-
+            
+            case TAKE:
+                take();
+                break;
+                
             case QUIT:
-                wantToQuit = quit(command);
+                quit = quit(command);
                 break;
         }
-        return wantToQuit;
+        return quit;
     }
 
     // implementations of user commands:
@@ -178,30 +181,39 @@ public class Game
      * Try to go in one direction. If there is an exit, enter the new
      * room, otherwise print an error message.
      */
-    private void goRoom(Command command) 
+    private boolean goRoom(Command command) 
     {
         if(!command.hasSecondWord()) {
             // if there is no second word, we don't know where to go...
             System.out.println("Go where?");
-            return;
+            return false;
         }
 
         String direction = command.getSecondWord();
 
         // Try to leave current room.
-        Room nextRoom = currentRoom.getExit(direction);
+        Room nextRoom = player.getCurrentRoom().getExit(direction);
 
         if (nextRoom == null) {
             System.out.println("There is no door!");
+            return false;
         }
         else {
-            prevRooms.push(currentRoom);
-            currentRoom = nextRoom;
-            System.out.println(currentRoom.getLongDescription());
-            if(!currentRoom.items.isEmpty()){
-                for(Item item : currentRoom.items){
-                    System.out.println(item.getDescription());
+            player.getPrevRooms().push(player.getCurrentRoom());
+            player.changeRoom(nextRoom);
+            System.out.println(player.getCurrentRoom().getLongDescription());
+            if(!player.getCurrentRoom().getItems().isEmpty()){
+                for(Item item : player.getCurrentRoom().getItems()){
+                    System.out.println(item.getLongDescription());
                 }
+            }
+            player.healthDecrease();
+            if(player.getHealth() == 0){
+                System.out.println("Oh no! You died!");
+                return true;
+            }
+            else{
+                return false;
             }
         }
     }
@@ -212,7 +224,7 @@ public class Game
      */
     private void look()
     {
-        System.out.println(currentRoom.getLongDescription());
+        System.out.println(player.getCurrentRoom().getLongDescription());
     }
     
     /**
@@ -227,21 +239,61 @@ public class Game
     /**
      * Go back to a previous room.
      */
-    private void back()
+    private boolean back()
     {
-        if(!prevRooms.empty()){
-            currentRoom = prevRooms.pop();
-            System.out.println(currentRoom.getLongDescription());
-            if(!currentRoom.items.isEmpty()){
-                for(Item item : currentRoom.items){
-                    System.out.println(item.getDescription());
+        if(!player.getPrevRooms().empty()){
+            player.changeRoom(player.getPrevRooms().pop());
+            System.out.println(player.getCurrentRoom().getLongDescription());
+            if(!player.getCurrentRoom().getItems().isEmpty()){
+                for(Item item : player.getCurrentRoom().getItems()){
+                    System.out.println(item.getLongDescription());
                 }
+            }
+            player.healthDecrease();
+            if(player.getHealth() == 0){
+                System.out.println("Oh no! You died!");
+                return true;
+            }
+            else{
+                return false;
             }
         }
         else{
             System.out.println("You cannot go further back.");
+            return false;
         }
         
+    }
+    
+    /**
+     * Pick up an item.
+     */
+    private void take()
+    {
+        if(player.getCurrentRoom().getItems().isEmpty()){
+            System.out.println("There is nothing in this room to take.");
+        }
+        else{
+            for(Item item : player.getCurrentRoom().getItems()){
+                if(item.getWeight() >  player.getMaxWeight()){
+                    System.out.println("Sorry, this item is too heavy.");
+                }
+                else{
+                    player.addItem(item);
+                    System.out.println("You added the " + 
+                    item.getDescription() + " to your inventory.");
+                }
+            }
+        }
+    }
+    /**
+     * Print all items currently being carried.
+     */
+    private void items()
+    {
+        for(Item item : player.getItems()){
+            System.out.println(item);
+        }
     }
 
     /** 

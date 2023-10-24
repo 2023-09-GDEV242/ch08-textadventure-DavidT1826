@@ -22,10 +22,25 @@ public class Item
     }
     
     /**
+     * Return the description of an item
+     */
+    public String getDescription(){
+        return description;
+    }
+    
+    /**
+     * Return the weight of an item
+     */
+    public int getWeight()
+    {
+        return weight;
+    }
+    
+    /**
      * Returns a string that shows what the item's description and weight 
      * is.
      */
-    public String getDescription()
+    public String getLongDescription()
     {
         return "In the room there is a " + description + " with a weight of "
         + weight;
