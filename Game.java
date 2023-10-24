@@ -45,40 +45,90 @@ public class Game
      */
     private void createRooms()
     {
-        Room outside, theater, pub, lab, office;
+        Room outside, theater, pub, computerLab, office, cafeteria, pool, 
+        stadium, scienceLab, scienceClassroom, mathClassroom, backstage,
+        historyClassroom, gym, lake;
       
         // create the rooms
         outside = new Room("outside the main entrance of the university");
         theater = new Room("in a lecture theater");
         pub = new Room("in the campus pub");
-        lab = new Room("in a computing lab");
+        computerLab = new Room("in a computing lab");
         office = new Room("in the computing admin office");
+        cafeteria = new Room("in the cafeteria");
+        pool = new Room("at the pool");
+        stadium = new Room("at the stadium");
+        scienceLab = new Room("in the science lab");
+        scienceClassroom = new Room("in the science classroom");
+        mathClassroom = new Room("in the math classroom");
+        backstage = new Room("in the theater backstage");
+        historyClassroom = new Room("in the history classroom");
+        gym = new Room("in the gym");
+        lake = new Room("at the lake");
         
-        Item mask, mug, syringe, paper;
+        Item bread, chips, cake, burger, iceCream, candy, magicCookie;
         
-        // create the items
-        mask = new Item("mask", 3);
-        mug = new Item("mug", 4);
-        syringe = new Item("syringe", 2);
-        paper = new Item("piece of paper", 1);
+        //Creat the items
+        bread = new Item("piece of bread", 1);
+        chips = new Item("bag of chips", 2);
+        cake = new Item("piece of cake", 4);
+        burger = new Item("burger", 3);
+        iceCream = new Item("ice cream cone", 3);
+        candy = new Item("candy bar", 2);
+        magicCookie = new Item("magic cookie", 2);
+        
         
         // initialise room exits and items
-        outside.setExit("east", theater);
-        outside.setExit("south", lab);
+        outside.setExit("east", lake);
+        outside.setExit("south", office);
         outside.setExit("west", pub);
-
-        theater.setExit("west", outside);
-        theater.setItem(mask);
-
+        outside.setExit("north", stadium);
+        
+        lake.setExit("west", outside);
+        lake.setExit("north", mathClassroom);
+        lake.setItem(bread);
+        
+        mathClassroom.setExit("south", lake);
+        mathClassroom.setExit("north", theater);
+        
+        theater.setExit("south", mathClassroom);
+        theater.setExit("east", backstage);
+        
+        backstage.setExit("west", theater);
+        backstage.setItem(iceCream);
+        
+        office.setExit("north", outside);
+        office.setExit("east", cafeteria);
+        office.setExit("west", computerLab);
+        
+        computerLab.setExit("east", office);
+        
+        cafeteria.setExit("west", office);
+        cafeteria.setItem(cake);
+        
         pub.setExit("east", outside);
-        pub.setItem(mug);
+        pub.setItem(burger);
+        
+        stadium.setExit("south", stadium);
+        stadium.setExit("east", historyClassroom);
+        stadium.setExit("north", gym);
+        stadium.setItem(chips);
+        
+        historyClassroom.setExit("west", stadium);
+        historyClassroom.setExit("north", scienceClassroom);
+        
+        scienceClassroom.setExit("south", historyClassroom);
+        scienceClassroom.setExit("east", scienceLab);
+        
+        scienceLab.setExit("west", scienceClassroom);
+        scienceLab.setItem(magicCookie);
+        
+        gym.setExit("south", stadium);
+        gym.setExit("east", pool);
+        gym.setItem(candy);
+        
+        pool.setExit("west", gym);
 
-        lab.setExit("north", outside);
-        lab.setExit("east", office);
-        lab.setItem(syringe);
-
-        office.setExit("west", lab);
-        office.setItem(paper);
 
         player.changeRoom(outside); // start game outside
     }
@@ -228,12 +278,16 @@ public class Game
     }
     
     /**
-     * Eat a peice of food. This will have some relevance later.
+     * Eat a peice of food. This will restore health.
      */
     private void eat()
     {
-        System.out.println("You have eaten now and you are not hungry" +
-        "anymore.");
+        if(player.getHealth() == 10){
+            System.out.println("You are not hungry right now,");
+        }
+        else{
+            player.eatItem();
+        }
     }
     
     /**

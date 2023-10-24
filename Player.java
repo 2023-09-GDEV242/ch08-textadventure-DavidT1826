@@ -24,7 +24,7 @@ public class Player
         items = new ArrayList<>();
         maxWeight = 5;
         currentWeight = 0;
-        health = 3;
+        health = 7;
     }
     
     /**
@@ -67,6 +67,21 @@ public class Player
     {
         items.add(item);
         currentWeight += item.getWeight();
+    }
+    
+    /**
+     * Eat the first item in your inventory.
+     */
+    public void eatItem()
+    {
+        System.out.println("You have eaten the " + 
+        items.get(0).getDescription() + ". You have recovered one health.");
+        if(items.get(0).getDescription() == "magic cookie"){
+            System.out.println("You can now cary more stuff!");
+            maxWeight = 10;
+        }
+        items.remove(0);
+        health += 1;
     }
    
     /**
