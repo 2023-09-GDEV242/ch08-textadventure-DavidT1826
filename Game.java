@@ -13,8 +13,8 @@ import java.util.Stack;
  *  rooms, creates the parser and starts the game.  It also evaluates and
  *  executes the commands that the parser returns.
  * 
- * @author  Michael Kölling and David J. Barnes
- * @version 2016.02.29
+ * @author  David Thompson
+ * @version 2023.10.22
  */
 
 public class Game 
@@ -230,6 +230,7 @@ public class Game
     /** 
      * Try to go in one direction. If there is an exit, enter the new
      * room, otherwise print an error message.
+     * @return returns true if the player died due to running out of health.
      */
     private boolean goRoom(Command command) 
     {
@@ -292,6 +293,7 @@ public class Game
     
     /**
      * Go back to a previous room.
+     * @return returns true if the player died due to runnint out of health.
      */
     private boolean back()
     {
@@ -364,5 +366,12 @@ public class Game
         else {
             return true;  // signal that we want to quit
         }
+    }
+    
+    /**
+     * This is the main method of the class.
+     */
+    public void main(){
+        play();
     }
 }

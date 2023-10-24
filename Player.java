@@ -1,10 +1,11 @@
 import java.util.Stack;
 import java.util.ArrayList;
 /**
- * Write a description of class Player here.
- *
- * @author (your name)
- * @version (a version number or a date)
+ * This class represents the player character you will be controling
+ * throughout the game
+ * 
+ * @author: David Thompson
+ * @version: 2023.10.22
  */
 public class Player
 {

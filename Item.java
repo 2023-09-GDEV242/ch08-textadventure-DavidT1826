@@ -1,9 +1,9 @@
 
 /**
- * Write a description of class Item here.
- *
- * @author (your name)
- * @version (a version number or a date)
+ * This is where all of the items in the game will be stored.
+ * 
+ * @author: David Thompson
+ * @version: 2023.10.22
  */
 public class Item
 {
